@@ -1,0 +1,45 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git reference to build from'
+        required: true
+      tag_name:
+        description: 'Tag name for the release'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+          build-essential \
+          cmake \
+          pkg-config \
+          libva-dev=2.22.0-3 \
+          libigdgmm-dev=22.7.2+ds1-1
+      - name: Build
+        run: |
+          mkdir ../build_media
+          cd ../build_media
+          cmake ../media-driver
+          make -j$(nproc)
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          target_commitish: ${{ github.event.inputs.ref }}
+          tag_name: ${{ github.event.inputs.tag_name }}
+          files: ../build_media/media_driver/iHD_drv_video.so
