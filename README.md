@@ -74,6 +74,7 @@ export LIBVA_DRIVER_NAME=iHD
 ## Supported Platforms
 
 - BDW (Broadwell)
+- CHV (Cherryview, Braswell)
 - SKL (Skylake)
 - BXTx (BXT: Broxton, APL: Apollo Lake, GLK: Gemini Lake)
 - KBLx (KBL: Kaby Lake, CFL: Coffee Lake, WHL: Whiskey Lake, CML: Comet Lake, AML: Amber Lake)
